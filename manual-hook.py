@@ -19,7 +19,7 @@ config = ConfigParser.ConfigParser()
 config.read(configFilepath)
 
 logger = logging.getLogger("logger")
-formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s %(message)s")
+formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s %(msg)s")
 consoleHandler = logging.StreamHandler(stream=sys.stdout)
 logger.setLevel(logging.DEBUG)
 consoleHandler.setLevel(logging.DEBUG)
@@ -43,9 +43,9 @@ def getAliyunDnsInstance():
 
 def auth():
     try:
-        if not os.environ.has_key('CERTBOT_DOMAIN'):
+        if 'CERTBOT_DOMAIN' not in os.environ:
             raise Exception('Environment variable CERTBOT_DOMAIN is empty.')
-        if not os.environ.has_key('CERTBOT_VALIDATION'):
+        if 'CERTBOT_VALIDATION' not in os.environ:
             raise Exception(
                 'Environment variable CERTBOT_VALIDATION is empty.')
 
@@ -70,13 +70,14 @@ def auth():
         logger.info('DNS setting end!')
 
     except Exception as e:
-        logger.error('Error: ' + str(e.message) + '\n')
+        #logger.error('Error: ' + str(e.msg) + '\n')
+        logger.error('Error: ' + str(e) + '\n')
         sys.exit()
 
 
 def cleanup():
     try:
-        if not os.environ.has_key('CERTBOT_DOMAIN'):
+        if 'CERTBOT_DOMAIN' not in os.environ:
             raise Exception('Environment variable CERTBOT_DOMAIN is empty.')
 
         domain = os.environ['CERTBOT_DOMAIN']
@@ -95,7 +96,7 @@ def cleanup():
         logger.info('Clean up end!')
 
     except Exception as e:
-        logger.error('Error: ' + str(e.message) + '\n')
+        logger.error('Error: ' + str(e.msg) + '\n')
         sys.exit()
 
 
@@ -170,8 +171,8 @@ def main(argc, argv):
     except AttributeError as e:
         logger.error(e.args)
     except Exception as e:
-        if e.message != '':
-            logger.error('Error: ' + str(e.message) + '\n')
+        if e.msg != '':
+            logger.error('Error: ' + str(e.msg) + '\n')
 
         sys.exit()
 
