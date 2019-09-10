@@ -98,9 +98,12 @@ class AliyunDns:
             raise SystemExit(e)
 
     def addDomainRecord(self, domain, rr, value):
+        tld = '.'.join(domain.split('.')[-2:])
+        subdomain = '.'.join(domain.split('.')[:-2])
+        if subdomain: rr = '.'.join([rr, subdomain])
         params = {
             'Action': 'AddDomainRecord',
-            'DomainName': domain,
+            'DomainName': tld,
             'RR': rr,
             'Type': 'TXT',
             'Value': value
@@ -108,9 +111,12 @@ class AliyunDns:
         self.__request(params)
 
     def deleteSubDomainRecord(self, domain, rr):
+        tld = '.'.join(domain.split('.')[-2:])
+        subdomain = '.'.join(domain.split('.')[:-2])
+        if subdomain: rr = '.'.join([rr, subdomain])
         params = {
             'Action': 'DeleteSubDomainRecords',
-            'DomainName': domain,
+            'DomainName': tld,
             'RR': rr,
             'Type': 'TXT'
         }
