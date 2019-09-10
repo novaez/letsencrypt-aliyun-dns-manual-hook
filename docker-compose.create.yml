@@ -1,0 +1,16 @@
+version: '3'
+services:
+
+    app:
+        image: certbot/certbot
+        volumes:
+            - ./:/opt/letsencrypt-aliyun-dns-manual-hook
+            - ./letsencrypt:/etc/letsencrypt
+        working_dir: /opt/letsencrypt-aliyun-dns-manual-hook
+        entrypoint:
+            - sh
+            - letsencrypt-create.sh
+            - -m
+            - ${EMAIL:-email@example.com}
+            - -d
+        command: ${DOMAIN:-example.com}
