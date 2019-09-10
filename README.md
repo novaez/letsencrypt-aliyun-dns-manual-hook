@@ -63,3 +63,14 @@ sh letsencrypt-create.sh -m your-email@example.com -d yourdomain.com -f
 ```
 
 如使用过程有任何问题，欢迎issue。
+
+### 五、使用 certbot docker 申请
+* 申请证书
+```
+DOMAIN=example.com EMAIL=email@example.com docker-compose -f docker-compose.create.yml up
+```
+
+* 更新证书
+```
+docker-compose up
+```
