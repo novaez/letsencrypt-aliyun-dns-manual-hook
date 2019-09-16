@@ -5,7 +5,7 @@ EMAIL=
 DOMAIN=
 FORCE=
 
-while getopts "m:d:f" opt; do
+while getopts "m:d:fn:" opt; do
   case $opt in
     m)
       EMAIL=${OPTARG}
@@ -15,6 +15,9 @@ while getopts "m:d:f" opt; do
       ;;
     f)
       FORCE=1
+      ;;
+    n)
+      TLD_LEN=${OPTARG}
       ;;
     \?)
       echo "Invalid option: -$OPTARG"
@@ -37,6 +40,6 @@ if [ -n "${FORCE}" ]; then
   cmd="${cmd} --force-renewal "
 fi
 
-cmd="${cmd} -n --manual-public-ip-logging-ok --agree-tos --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory --manual --manual-auth-hook 'python $DIR/manual-hook.py --auth' --manual-cleanup-hook 'python $DIR/manual-hook.py --cleanup' -d ${DOMAIN} -d *.${DOMAIN}"
+cmd="${cmd} -n --manual-public-ip-logging-ok --agree-tos --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory --manual --manual-auth-hook 'python $DIR/manual-hook.py --auth ${TLD_LEN}' --manual-cleanup-hook 'python $DIR/manual-hook.py --cleanup' -d ${DOMAIN} -d *.${DOMAIN}"
 
 eval ${cmd}
