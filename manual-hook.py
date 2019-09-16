@@ -41,7 +41,7 @@ def getAliyunDnsInstance():
     return aliyun.AliyunDns(appid, appsecret)
 
 
-def auth():
+def auth(tld_length):
     try:
         if 'CERTBOT_DOMAIN' not in os.environ:
             raise Exception('Environment variable CERTBOT_DOMAIN is empty.')
@@ -54,13 +54,14 @@ def auth():
 
         logger.info('Start setting DNS')
         logger.info('Domain:' + domain)
+        logger.info('Domain length:' + tld_length)
         logger.info('Value:' + value)
 
         aliyunDns = getAliyunDnsInstance()
         # aliyunDns.toString()
 
         # add letsencrypt domain record
-        aliyunDns.addLetsencryptDomainRecord(domain, value)
+        aliyunDns.addLetsencryptDomainRecord(domain, int(tld_length), value)
 
         # wait for completion
         logger.info('sleep 10 secs')
@@ -125,7 +126,7 @@ def usage():
     printOpt(['-v', '--version'],
              'Display version information.')
     printOpt(['--auth'],
-             'auth hook.')
+             'auth hook, with lenght of the domain.')
     printOpt(['--cleanup'],
              'auth hook.')
 
@@ -149,7 +150,7 @@ def main(argc, argv):
             [
                 'help',
                 'version',
-                'auth',
+                'auth=',
                 'cleanup',
             ]
         )
@@ -159,8 +160,8 @@ def main(argc, argv):
                 usage()
             elif opt in ('-v', '--version'):
                 version()
-            elif opt in ('--auth'):
-                auth()
+            elif opt in ('--auth, with length of top level of the domain'):
+                auth(arg)
             elif opt in ('--cleanup'):
                 cleanup()
             else:
