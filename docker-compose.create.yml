@@ -12,5 +12,4 @@ services:
             - letsencrypt-create.sh
             - -m
             - ${EMAIL:-email@example.com}
-            - -d
-        command: ${DOMAIN:-example.com}
+        command: ["-d", "${DOMAIN:-example.com}", "-n", "${TLD_LEN:-2}"]
