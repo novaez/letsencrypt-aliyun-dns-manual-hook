@@ -97,9 +97,9 @@ class AliyunDns:
             self.__logger.info(e.read().strip().decode('utf-8'))
             raise SystemExit(e)
 
-    def addDomainRecord(self, domain, rr, value):
-        tld = '.'.join(domain.split('.')[-2:])
-        subdomain = '.'.join(domain.split('.')[:-2])
+    def addDomainRecord(self, domain, tld_length, rr, value):
+        tld = '.'.join(domain.split('.')[-tld_length:])
+        subdomain = '.'.join(domain.split('.')[:-tld_length])
         if subdomain: rr = '.'.join([rr, subdomain])
         params = {
             'Action': 'AddDomainRecord',
@@ -122,8 +122,8 @@ class AliyunDns:
         }
         self.__request(params)
 
-    def addLetsencryptDomainRecord(self, domain, value):
-        self.addDomainRecord(domain, self.__letsencryptSubDomain, value)
+    def addLetsencryptDomainRecord(self, domain, tld_length, value):
+        self.addDomainRecord(domain, tld_length, self.__letsencryptSubDomain, value)
 
     def deleteLetsencryptDomainRecord(self, domain):
         self.deleteSubDomainRecord(domain, self.__letsencryptSubDomain)
